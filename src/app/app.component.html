@@ -1,0 +1,214 @@
+<main class="main">
+  <div class="currency" title="Изменить валюту" (click)="changeCurrency()">
+    {{ currency }}
+  </div>
+
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <img src="./assets/img/logo.png" alt="логотип" />
+      </div>
+
+      <nav class="menu">
+        <ul class="menu__list">
+          <li class="menu__item">
+            <a (click)="scrollTo(products)">Каталог</a>
+          </li>
+          <li class="menu__item">
+            <a (click)="scrollTo(love)">О нас</a>
+          </li>
+          <li class="menu__item">
+            <a (click)="scrollTo(order)">Оформление заказа</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="main-content">
+    <div class="container">
+      <img class="line-1" src="./assets/img/line1.png" alt="line" />
+      <div class="main-info">
+        <h1 class="main-title">Магия вкуса в каждой крошке</h1>
+        <p class="main-text">
+          Наши рецепты вдыхают жизнь в изысканность ингредиентов: ароматное
+          натуральное масло, свежие сливки, чистый мёд и отборная мука. Мы
+          тщательно отбираем каждый компонент премиального печенья, стремясь
+          подарить вам истинное кулинарное наслаждение.
+        </p>
+
+        <div class="main-action">
+          <button
+            class="button"
+            id="main-action-button"
+            (click)="scrollTo(products)"
+          >
+            Заказать
+          </button>
+        </div>
+      </div>
+
+      <img
+        class="main-image"
+        src="./assets/img/cookie.png"
+        alt="Cookie"
+        [ngStyle]="mainImageStyle"
+      />
+    </div>
+  </section>
+
+  <section class="products" id="products" #products>
+    <div class="container">
+      <img class="line-2" src="./assets/img/line2.png" alt="line" />
+      <div class="common-title">Выберите печенье</div>
+      <div class="sugar-free">
+        <div>Все</div>
+        <input type="checkbox" id="switch" (change)="switchSugarFree($event)" />
+        <label for="switch"></label>
+        <div>Без сахара</div>
+      </div>
+
+      <div class="products__items">
+        <div class="products__item" *ngFor="let product of productsData">
+          <div class="products__item-image">
+            <img src="{{ product.image }}" alt="Продукт" />
+          </div>
+
+          <div class="products__item-details">
+            <div class="products__item-title">{{ product.title }}</div>
+
+            <div class="products__item-text">
+              {{ product.text }}
+            </div>
+
+            <div class="products__item-extra">
+              <div class="products__item-info">
+                <div class="products__item-price">
+                  {{ product.price }} {{ currency }}
+                </div>
+                <div class="products__item-weight">{{ product.weight }}</div>
+              </div>
+              <button
+                class="button button--violet"
+                (click)="scrollTo(order, product)"
+              >
+                Заказать
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="love" id="love" #love>
+    <div class="container">
+      <div class="common-title">Пекарня с любовью</div>
+
+      <div class="love__items">
+        <div class="love__item love__item--white">
+          <div class="love__item-title">
+            Приготовлено с заботой, чтобы радовать вас каждый день
+          </div>
+          <div class="love__item-text">
+            Мы с гордостью представляем наше печенье, которое мы выпекаем
+            вручную каждый день с 1995 года, используя только лучшие
+            ингредиенты. Погрузитесь в мир изысканных лакомств, приготовленных
+            с применением передовых технологий, и насладитесь их неповторимым
+            вкусом.
+          </div>
+        </div>
+        <div class="love__item love__item--image">
+          <img src="./assets/img/love.png" alt="Cookies image" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="order" id="order" #order>
+    <img class="line-3" src="./assets/img/line3.png" alt="line" />
+    <div class="container">
+      <div class="common-title">Закажите печенье</div>
+      <img
+        class="order__bg-image"
+        src="./assets/img/breadcrumbs.png"
+        alt="breadcrumbs"
+      />
+      <div class="order__block">
+        <div class="order__block-form">
+          <div class="order__block-form-text">
+            Откройте для себя волшебство вкуса с нашим премиальным печеньем!
+            Закажите прямо сейчас и окунитесь в мир сладких наслаждений.
+          </div>
+          <div class="order__block-form-inputs" [formGroup]="form">
+            <input
+              type="text"
+              placeholder="Выберите печенье"
+              id="product"
+              formControlName="product"
+              [class]="{
+                error:
+                  form.get('product')?.invalid &&
+                  (form.get('product')?.dirty || form.get('product')?.touched)
+              }"
+              readonly
+            />
+            <input
+              type="text"
+              placeholder="Ваше имя"
+              id="name"
+              formControlName="name"
+              [class]="{
+                error:
+                  form.get('name')?.invalid &&
+                  (form.get('name')?.dirty || form.get('name')?.touched)
+              }"
+            />
+            <input
+              type="text"
+              placeholder="Ваш телефон"
+              id="phone"
+              formControlName="phone"
+              [class]="{
+                error:
+                  form.get('phone')?.invalid &&
+                  (form.get('phone')?.dirty || form.get('phone')?.touched)
+              }"
+            />
+            <button
+              class="button button--violet"
+              id="order-action"
+              (click)="confirmOrder()"
+              [disabled]="!form.valid"
+            >
+              Оформить заказ
+            </button>
+          </div>
+        </div>
+        <div class="order__block-image">
+          <img
+            src="./assets/img/order.png"
+            alt="Cookies"
+            [ngStyle]="orderImageStyle"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="logo">
+      <img src="./assets/img/logo.png" alt="Логотип" />
+    </div>
+    <div class="copyright">«Все права защищены»</div>
+  </footer>
+</main>
+
+<div class="loader" [class]="{ showed: loaderShowed }" *ngIf="loader">
+  <lottie-player
+    src="./assets/cookie.json"
+    background="transparent"
+    speed="1.5"
+    autoplay
+  ></lottie-player>
+</div>
